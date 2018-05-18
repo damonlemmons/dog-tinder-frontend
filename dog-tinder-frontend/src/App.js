@@ -3,38 +3,39 @@ import Dogs from './pages/Dogs';
 import NewDog from './pages/NewDog';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import Header from './components/Header';
-
+import { getDogs } from './api'
+import { createDogs } from './api'
 
 class App extends Component {
   constructor(props){
     super(props)
     this.state = {
-      dogs: [
-        {
-          id: 1,
-          name: 'Morris',
-          age: 2,
-          enjoys: "Long walks on the beach."
-        },
-        {
-          id: 2,
-          name: 'Paws',
-          age: 4,
-          enjoys: "Snuggling by the fire."
-        },
-        {
-          id: 3,
-          name: 'Mr. Meowsalot',
-          age: 12,
-          enjoys: "Being in charge."
-        }
-      ]
+      dogs: [],
+      newDogSuccess: false
     }
   }
 
-  handleNewDog(data) {
-  console.log(data);
-}
+  componentWillMount() {
+    getDogs()
+    .then(APIdogs => {
+      this.setState({
+        dogs: APIdogs
+      })
+    })
+  }
+
+  handleNewDog(newDogInfo) {
+    console.log("New Dog TRY", newDogInfo)
+    createDogs(newDogInfo)
+    .then(successDog => {
+      console.log("CREATE SUCCESS!", successDog);
+      this.setState({
+        newDogSuccess: true
+      })
+    })
+  }
+
+
 
   render() {
     return (
@@ -43,7 +44,7 @@ class App extends Component {
           <Router>
               <Switch>
                   <Route exact path="/dogs" render={ (props) => <Dogs dogs={this.state.dogs}/> } />
-                  <Route exact path="/" render={ (props) => <NewDog handleDog={this.handleNewDog.bind(this)} /> } />
+                  <Route exact path="/" render={ (props) => <NewDog success={this.state.newDogSuccess} handleDog={this.handleNewDog.bind(this)} /> } />
               </Switch>
           </Router>
       </div>

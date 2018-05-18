@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import {FormControl} from 'react-bootstrap';
+import { FormControl } from 'react-bootstrap';
+import { Redirect }  from 'react-router-dom';
+
 
 class NewDog extends Component {
   constructor(props){
@@ -26,6 +28,7 @@ handleSubmit(event) {
 
 
   render() {
+      debugger
       return (
         <div>
         <form>
@@ -56,14 +59,16 @@ handleSubmit(event) {
         <FormControl
         type="submit"
         name="create dog"
-        placeholder="Create Dog"
         onClick={this.handleSubmit.bind(this)}
         />
 
-
         </form>
+
+        {this.props.success &&
+        <Redirect to="/dogs" />
+        }
         </div>
-)
+      )
 
   }
 }
